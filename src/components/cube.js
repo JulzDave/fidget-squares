@@ -24,7 +24,7 @@ const shuffle = array => {
 	return array;
 };
 
-const CubeStyle = styled.div`
+const CubeStyle = styled.span`
 	border-radius: 3px;
 	height: 2.9rem;
 	width: 2.9rem;
