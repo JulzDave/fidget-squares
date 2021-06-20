@@ -1,4 +1,8 @@
+// import { useState } from 'react';
 import styled from 'styled-components';
+
+const ANIMATION_SPEED = 1500;
+const ANIMATION_LINGER = ANIMATION_SPEED + 20;
 
 const shuffle = array => {
 	var currentIndex = array.length,
@@ -22,12 +26,17 @@ const shuffle = array => {
 
 const CubeStyle = styled.div`
 	border-radius: 3px;
-	height: 15px;
-	width: 15px;
+	height: 2.9rem;
+	width: 2.9rem;
+	font-size: 2rem;
+	/* border: 1px solid white; */
 	color: white;
-	margin: 1px;
+	margin: 3px;
+	cursor: pointer;
+	text-align: center;
+	user-select: none;
 	/* border: 0.5px groove white; */
-	/* transition: background-color ease-out 3s; */
+	/* transition: background-color ease-out ${ANIMATION_SPEED}ms; */
 	@keyframes fadeOut {
 		0% {
 			opacity: 1;
@@ -36,31 +45,102 @@ const CubeStyle = styled.div`
 			opacity: 0;
 		}
 	}
+
+	&:active {
+		filter: invert(1);
+	}
 `;
 const leaveHandler = ev => {
-	ev.target.style.animation = 'fadeOut ease 3s';
+	ev.target.style.animation = `fadeOut ease ${
+		ANIMATION_LINGER
+	}ms`;
 	// ev.target.style.backgroundColor = 'transparent';
 };
 
-const hoverHandler = ev => {
+const hoverHandler = (ev, props) => {
+	if (ev.target.innerHTML) {
+		return;
+	}
+
 	const a = Math.floor(Math.random() * (255 - 0 + 1) + 0);
 	const b = Math.floor(Math.random() * (255 - 0 + 1) + 0);
 	const c = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+
 	const shuffledColors = shuffle([a, b, c]).join(', ');
 	const rgbShuffledColors = `rgb(${shuffledColors})`;
+	const { emojis } = props;
 	ev.target.style.backgroundColor = rgbShuffledColors;
-	ev.target.style.animation = 'fadeOut ease 3s';
+	ev.target.style.animation = `fadeOut ease ${
+		ANIMATION_LINGER
+	}ms`;
 	ev.target.style.boxShadow = `0px 0px 6px 1px ${rgbShuffledColors}`;
+	ev.target.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
 
 	setTimeout(() => {
-		ev.target.style.backgroundColor = 'black';
+		ev.target.style.backgroundColor = 'transparent	';
 		ev.target.style.animation = '';
 		ev.target.style.boxShadow = '';
-	}, 3000);
+		ev.target.innerHTML = '';
+	}, ANIMATION_SPEED);
 };
 
-const Cube = _props => {
-	return <CubeStyle onMouseLeave={leaveHandler} onMouseOver={hoverHandler} />;
+// const fetchEmojiData = async ev => {
+// 	const url = 'https://api.emojidata.ai/sentiment-analysis';
+// 	const requestOptions = {
+// 		method: 'POST',
+// 		headers: { 'Content-Type': 'application/json' },
+// 		body: JSON.stringify({
+// 			api_key: 'rrpsw-mHZPIfDM3vK4IA',
+// 			text: ev.target.innerHTML
+// 		})
+// 	};
+// 	const response = await fetch(url, requestOptions);
+// 	const data = await response.json();
+// 	console.log(data);
+// };
+
+const assignEmojiData = (ev, props) => {
+	const foundEmojiDatum = props.emojiData?.[ev.target.innerHTML];
+	if (foundEmojiDatum?.group === props.findSubject) {
+		const slug = foundEmojiDatum?.slug;
+		if (slug) {
+			alert(
+				`SUCCESS! this is a ${slug} and a ${slug} is part of ${props.findSubject}`
+			);
+		}
+	}
+	if (foundEmojiDatum) {
+		console.log(foundEmojiDatum);
+	}
+};
+
+const animateOnClick = (ev, props) => {
+	ev.target.style.zIndex = '100';
+	ev.target.style.transform = 'scale(3)';
+	ev.target.style.pointerEvents = 'none';
+	assignEmojiData(ev, props);
+
+	setTimeout(() => {
+		ev.target.style.pointerEvents = 'initial';
+		ev.target.style.zIndex = '10';
+		ev.target.style.transform = 'scale(1)';
+	}, ANIMATION_SPEED);
+};
+
+const Cube = props => {
+	// const [innerHtml, setInnerHtml] = useState('')
+	return (
+		<CubeStyle
+			// onClick={fetchEmojiData}
+			onClick={ev => {
+				animateOnClick(ev, props);
+			}}
+			onMouseLeave={leaveHandler}
+			onMouseOver={ev => {
+				hoverHandler(ev, props);
+			}}
+		/>
+	);
 };
 
 export default Cube;
