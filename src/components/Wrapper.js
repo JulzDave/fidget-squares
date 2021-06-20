@@ -13422,7 +13422,21 @@ const Wrapper = props => {
 	const [findSubject, setFindSubject] = useState(sample());
 	// const [AudSucces] = useState(new Audio('../../public/sounds/zapsplat_bell_small_reception_desk_bell_single_ring_003_15125.mp3'));
 
-	console.log(findSubject);
+	/*
+	A 2-step calculation for the following problem:
+	? how many tiles fit on random screen resolution:
+
+		? Given that:
+		--> 38 tiles fit in a 1920px wide screen.
+		--> 19 tiles fit in a 937px high screen.
+
+		? calculation step A:
+		--> Calculated width: {1920 / x = 38}  //x = 50.5263 ==> 0.0265625 ==>  2.7%
+		--> Calculated height: {937 / x = 19}   //x = 49.3157 ==> 0.0202774 ==> 2.05%
+
+		? calculation step B:
+		--> ((width * 0.027) + (height * 0.0205))
+	*/
 
 	const height = props.dimentions.height;
 	const width = props.dimentions.width;
