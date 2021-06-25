@@ -13398,9 +13398,12 @@ const WrapperStyle = styled.div`
 	margin: 0;
 	padding: 0;
 	display: flex;
+    flex-direction: row;
 	flex-wrap: wrap;
+	justify-content: space-between;
+    align-content: flex-start;
+    align-items: flex-start;
 	overflow: hidden;
-	justify-content: center;
 `;
 const sample = () => {
 	const groupNames = [

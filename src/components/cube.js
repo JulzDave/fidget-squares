@@ -30,12 +30,9 @@ const CubeStyle = styled.span`
 	width: 2.9rem;
 	font-size: 2rem;
 	/* border: 1px solid white; */
-	color: white;
-	margin: 3px;
 	cursor: pointer;
 	text-align: center;
 	user-select: none;
-	/* border: 0.5px groove white; */
 	/* transition: background-color ease-out ${ANIMATION_SPEED}ms; */
 	@keyframes fadeOut {
 		0% {
