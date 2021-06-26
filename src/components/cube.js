@@ -1,5 +1,6 @@
 // import { useState } from 'react';
 import styled from 'styled-components';
+import { SQUARE_WIDTH } from '../constants/css-metrics';
 
 const ANIMATION_SPEED = 1500;
 const ANIMATION_LINGER = ANIMATION_SPEED + 20;
@@ -26,9 +27,9 @@ const shuffle = array => {
 
 const CubeStyle = styled.span`
 	border-radius: 3px;
-	height: 2.9rem;
-	width: 2.9rem;
-	font-size: 2rem;
+	height: ${SQUARE_WIDTH}px;
+	width: ${SQUARE_WIDTH}px;
+	font-size: ${SQUARE_WIDTH * 0.7}px;
 	/* border: 1px solid white; */
 	cursor: pointer;
 	text-align: center;

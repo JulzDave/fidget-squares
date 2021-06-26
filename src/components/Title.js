@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const TitleStyle = styled.div`
 	width: 100%;
 	display: flex;
-	justify-content: center;
+	justify-content: flex-start;
 	position: absolute;
 	pointer-events: none;
 	z-index: 1000;

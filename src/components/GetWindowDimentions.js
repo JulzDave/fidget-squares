@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
+import { DEDICATED_VIEWPORT } from '../constants/css-metrics';
 
 function getWindowDimensions() {
 	const { innerWidth: width, innerHeight: height } = window;
 	
 	return {
-		width,
-		height
+		width: width * parseFloat(`0.${DEDICATED_VIEWPORT}`),
+		height: height * parseFloat(`0.${DEDICATED_VIEWPORT}`)
 	};
 }
 
