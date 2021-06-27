@@ -81,8 +81,8 @@ const Wrapper = props => {
 	const height = props.dimentions.height;
 	const width = props.dimentions.width;
 	console.log({
-		height: Math.floor(height * 0.0205),
-		width: Math.floor(width * 0.027)
+		height: Math.floor(height / SQUARE_WIDTH),
+		width: Math.floor(width / SQUARE_WIDTH)
 	});
 	return (
 		<WrapperStyle className="wrapper" dimentions={props.dimentions}>

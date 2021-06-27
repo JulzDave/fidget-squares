@@ -3,11 +3,17 @@ import Wrapper from './components/Wrapper';
 import useWindowDimensions from './components/GetWindowDimentions';
 import styled from 'styled-components';
 import { DEDICATED_VIEWPORT } from './constants/css-metrics';
+import { useState } from 'react';
+import ARCADE_CLASSIC_FONT from "./assets/fonts/ARCADECLASSIC.TTF";
 
 const AppWrapper = styled.div`
 	width: ${DEDICATED_VIEWPORT + DEDICATED_VIEWPORT * 0.025}vw;
 	height: ${DEDICATED_VIEWPORT}vh;
-	box-shadow: 0px 0px 10px 17px;
+	background-color: black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* box-shadow: 0px 0px 10px 17px; */
 `;
 const AppWrapperWrapper = styled.div`
 	display: flex;
@@ -43,29 +49,63 @@ body {
 } */
 `;
 
+const GameMenu = styled.div`
+@font-face {
+        font-family: 'Arcade Classic';
+        src: url(${ARCADE_CLASSIC_FONT}) format('truetype');
+        font-style: normal;
+    }
+font-family: 'Arcade Classic';
+font-size: 2rem;
+
+width: 30vw;
+height: 30vh;
+background-color: black;
+border: 10px double white;
+display:flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+
+
+color: white;
+&:hover{
+	color: yellow;
+}
+`
 const BackgroundAnimation = styled.div`
 	position: absolute;
 	width: 100%;
 	height: 100%;
 	z-index: -1000;
-	background-color: #2ecc71;
-	animation: hue 5s linear 0s infinite reverse;
+	background: linear-gradient(-45deg, #9bffb4, #ff92ff, #9be4ff, #fffd8e, red);
+	background-size: 400% 400%;
+	animation: hue 5s ease infinite;
 
 	@keyframes hue {
-		to {
-			filter: hue-rotate(1turn);
-		}
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+		/* filter: hue-rotate(1turn); */
+	}
 	}
 `;
 
 function App() {
 	const { height, width } = useWindowDimensions();
-
+	const [startGame, setStartGame] = useState(false)
 	return (
 		<AppWrapperWrapper>
 			<BackgroundAnimation />
 			<AppWrapper>
-				<Wrapper dimentions={{ height, width }}></Wrapper>;
+				{startGame ?
+					<Wrapper dimentions={{ height, width }}></Wrapper>
+					: <GameMenu><p onClick={() => setStartGame(!startGame)}>Start Game</p></GameMenu>}
 			</AppWrapper>
 		</AppWrapperWrapper>
 	);

@@ -1,9 +1,6 @@
 // import { useState } from 'react';
 import styled from 'styled-components';
-import { SQUARE_WIDTH } from '../constants/css-metrics';
-
-const ANIMATION_SPEED = 1500;
-const ANIMATION_LINGER = ANIMATION_SPEED + 20;
+import { ANIMATION_LINGER, ANIMATION_SPEED, SQUARE_WIDTH } from '../constants/css-metrics';
 
 const shuffle = array => {
 	var currentIndex = array.length,
@@ -34,6 +31,9 @@ const CubeStyle = styled.span`
 	cursor: pointer;
 	text-align: center;
 	user-select: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	/* transition: background-color ease-out ${ANIMATION_SPEED}ms; */
 	@keyframes fadeOut {
 		0% {
