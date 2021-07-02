@@ -90,7 +90,7 @@ const Wrapper = props => {
 	return (
 		<WrapperStyle className="wrapper" dimentions={props.dimentions}>
 			<Title findSubject={findSubject} />
-			{[...Array(computedWidth * computedHeight).keys()].map(x => (
+			{[...Array(computedWidth * computedHeight).keys()].map(index => (
 				<Cube
 					emojis={EMOJIS}
 					emojiData={EMOJI_DATA}
@@ -98,7 +98,8 @@ const Wrapper = props => {
 					computedWidth={computedWidth}
 					computedHeight={computedHeight}
 					setFindSubject={setFindSubject}
-					key={x}
+					key={index}
+					index={index}
 				/>
 			))}
 		</WrapperStyle>

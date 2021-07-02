@@ -1,6 +1,10 @@
 // import { useState } from 'react';
 import styled from 'styled-components';
-import { ANIMATION_LINGER, ANIMATION_SPEED, SQUARE_WIDTH } from '../constants/css-metrics';
+import {
+	ANIMATION_LINGER,
+	ANIMATION_SPEED,
+	SQUARE_WIDTH
+} from '../constants/css-metrics';
 
 const shuffle = array => {
 	var currentIndex = array.length,
@@ -49,9 +53,7 @@ const CubeStyle = styled.span`
 	}
 `;
 const leaveHandler = ev => {
-	ev.target.style.animation = `fadeOut ease ${
-		ANIMATION_LINGER
-	}ms`;
+	ev.target.style.animation = `fadeOut ease ${ANIMATION_LINGER}ms`;
 	// ev.target.style.backgroundColor = 'transparent';
 };
 
@@ -68,9 +70,7 @@ const hoverHandler = (ev, props) => {
 	const rgbShuffledColors = `rgb(${shuffledColors})`;
 	const { emojis } = props;
 	ev.target.style.backgroundColor = rgbShuffledColors;
-	ev.target.style.animation = `fadeOut ease ${
-		ANIMATION_LINGER
-	}ms`;
+	ev.target.style.animation = `fadeOut ease ${ANIMATION_LINGER}ms`;
 	ev.target.style.boxShadow = `0px 0px 6px 1px ${rgbShuffledColors}`;
 	ev.target.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
 
@@ -114,7 +114,8 @@ const assignEmojiData = (ev, props) => {
 
 const animateOnClick = (ev, props) => {
 	ev.target.style.zIndex = '100';
-	ev.target.style.transform = 'scale(3)';
+	ev.target.style.transform = `translate(${translateByIndex(props)})`;
+	ev.target.style.transform = ev.target.style.transform += ' scale(3)';
 	ev.target.style.pointerEvents = 'none';
 	assignEmojiData(ev, props);
 
@@ -125,7 +126,36 @@ const animateOnClick = (ev, props) => {
 	}, ANIMATION_SPEED);
 };
 
+const translateByIndex = props => {
+	const index = props.index + 1;
+	const cubesInHeight = props.computedHeight;
+	const cubesInWidth = props.computedWidth;
+	console.log(index === cubesInWidth * cubesInHeight - cubesInWidth);
+	debugger;
+
+	if (index <= cubesInWidth) {
+		if (index === 1) {
+			return `${SQUARE_WIDTH}px, ${SQUARE_WIDTH}px`;
+		} else if (index === cubesInWidth) {
+			return `-${SQUARE_WIDTH}px, ${SQUARE_WIDTH}px`;
+		}
+		return `0px, ${SQUARE_WIDTH}px`;
+	} else if (index > cubesInWidth * cubesInHeight - cubesInWidth) {
+		if (index === cubesInWidth * cubesInHeight) {
+			return `-${SQUARE_WIDTH}px, -${SQUARE_WIDTH}px`;
+		} else if (index === cubesInWidth * cubesInHeight - cubesInWidth + 1) {
+			return `${SQUARE_WIDTH}px, -${SQUARE_WIDTH}px`;
+		}
+		return `0px, -${SQUARE_WIDTH}px`;
+	} else if (index % cubesInWidth === 0) {
+		return `-${SQUARE_WIDTH}px, 0px`;
+	} else if (index % cubesInWidth === 1) {
+		return `${SQUARE_WIDTH}px, 0px`;
+	}
+};
+
 const Cube = props => {
+	debugger;
 
 	// const [innerHtml, setInnerHtml] = useState('')
 	return (

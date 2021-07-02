@@ -7,6 +7,7 @@ const TitleStyle = styled.div`
 	position: absolute;
 	pointer-events: none;
 	z-index: 1000;
+	user-select: none;
 `;
 
 const Title = props => {
