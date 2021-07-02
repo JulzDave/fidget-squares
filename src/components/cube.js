@@ -126,6 +126,7 @@ const animateOnClick = (ev, props) => {
 };
 
 const Cube = props => {
+
 	// const [innerHtml, setInnerHtml] = useState('')
 	return (
 		<CubeStyle

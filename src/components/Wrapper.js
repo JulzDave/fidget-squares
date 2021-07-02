@@ -80,23 +80,23 @@ const Wrapper = props => {
 	*/
 	const height = props.dimentions.height;
 	const width = props.dimentions.width;
-	console.log({
-		height: Math.floor(height / SQUARE_WIDTH),
-		width: Math.floor(width / SQUARE_WIDTH)
-	});
+	// console.log({
+	// 	height: Math.floor(height / SQUARE_WIDTH),
+	// 	width: Math.floor(width / SQUARE_WIDTH)
+	// });
+
+	const computedWidth = Math.floor(width / SQUARE_WIDTH);
+	const computedHeight = Math.floor(height / SQUARE_WIDTH);
 	return (
 		<WrapperStyle className="wrapper" dimentions={props.dimentions}>
 			<Title findSubject={findSubject} />
-			{[
-				...Array(
-					Math.floor(width / SQUARE_WIDTH) *
-						Math.floor(height / SQUARE_WIDTH)
-				).keys()
-			].map(x => (
+			{[...Array(computedWidth * computedHeight).keys()].map(x => (
 				<Cube
 					emojis={EMOJIS}
 					emojiData={EMOJI_DATA}
 					findSubject={findSubject}
+					computedWidth={computedWidth}
+					computedHeight={computedHeight}
 					setFindSubject={setFindSubject}
 					key={x}
 				/>
