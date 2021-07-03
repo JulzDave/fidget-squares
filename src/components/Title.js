@@ -10,21 +10,28 @@ const TitleStyle = styled.div`
 	user-select: none;
 `;
 
+
+
 const Title = props => {
 	return (
 		<TitleStyle>
-			<h1
+			<div
 				style={{
-					background: 'red',
-					padding: '15px',
-					borderRadius: '100px',
+					background: 'black',
+					/* padding: 45px, */
+					/* border-radius: 100px, */
 					textTransform: 'capitalize',
 					textDecoration: 'underline',
-					border: '5px double aliceblue'
+					/* border: 5px double aliceblue, */
+					width: 'calc((45px * 6) + 10px)',
+					height: 'calc((45px * 3) + 10px)',
+					borderStyle: 'solid',
+					borderWidth: '2px',
+					borderColor: 'white',
 				}}
 			>
 				{props.findSubject}
-			</h1>
+			</div>
 		</TitleStyle>
 	);
 };

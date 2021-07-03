@@ -4,7 +4,6 @@ import useWindowDimensions from './components/GetWindowDimentions';
 import styled from 'styled-components';
 import { DEDICATED_VIEWPORT } from './constants/css-metrics';
 import { useState } from 'react';
-import ARCADE_CLASSIC_FONT from "./assets/fonts/ARCADECLASSIC.TTF";
 
 const AppWrapper = styled.div`
 	width: ${DEDICATED_VIEWPORT + DEDICATED_VIEWPORT * 0.025}vw;
@@ -50,12 +49,7 @@ body {
 `;
 
 const GameMenu = styled.div`
-@font-face {
-        font-family: 'Arcade Classic';
-        src: url(${ARCADE_CLASSIC_FONT}) format('truetype');
-        font-style: normal;
-    }
-font-family: 'Arcade Classic';
+
 font-size: 2rem;
 
 width: 30vw;

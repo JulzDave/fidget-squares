@@ -130,8 +130,6 @@ const translateByIndex = props => {
 	const index = props.index + 1;
 	const cubesInHeight = props.computedHeight;
 	const cubesInWidth = props.computedWidth;
-	console.log(index === cubesInWidth * cubesInHeight - cubesInWidth);
-	debugger;
 
 	if (index <= cubesInWidth) {
 		if (index === 1) {
