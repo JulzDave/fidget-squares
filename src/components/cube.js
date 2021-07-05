@@ -1,4 +1,5 @@
 // import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import {
 	ANIMATION_LINGER,
@@ -47,39 +48,48 @@ const CubeStyle = styled.span`
 			opacity: 0;
 		}
 	}
-
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
 	&:active {
 		filter: invert(1);
 	}
 `;
-const leaveHandler = ev => {
-	ev.target.style.animation = `fadeOut ease ${ANIMATION_LINGER}ms`;
-	// ev.target.style.backgroundColor = 'transparent';
+const leaveHandler = setAnimation => {
+	setAnimation(() => `fadeOut ease ${ANIMATION_LINGER}ms`);
+	// ev.target.style.backgroundColor = 'black';
 };
 
-const hoverHandler = (ev, props) => {
-	if (ev.target.innerHTML) {
+const randomColorDepth = () => Math.floor(Math.random() * (255 - 0 + 1) + 0);
+
+const hoverHandler = (props, statefulStyles) => {
+	const { setInnerHTML, setBackgroundColor, setAnimation, setBoxShadow } =
+		statefulStyles.setStatefulStyle;
+	const { emojis } = props;
+	if (statefulStyles.getStatefulStyle.innerHTML) {
+		setInnerHTML('');
+		setBackgroundColor('black');
+		setAnimation('');
+		setBoxShadow('');
 		return;
 	}
+	const r = randomColorDepth();
+	const g = randomColorDepth();
+	const b = randomColorDepth();
 
-	const a = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-	const b = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-	const c = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-
-	const shuffledColors = shuffle([a, b, c]).join(', ');
+	const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+	const shuffledColors = shuffle([r, g, b]).join(', ');
 	const rgbShuffledColors = `rgb(${shuffledColors})`;
-	const { emojis } = props;
-	ev.target.style.backgroundColor = rgbShuffledColors;
-	ev.target.style.animation = `fadeOut ease ${ANIMATION_LINGER}ms`;
-	ev.target.style.boxShadow = `0px 0px 6px 1px ${rgbShuffledColors}`;
-	ev.target.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
 
-	setTimeout(() => {
-		ev.target.style.backgroundColor = 'transparent	';
-		ev.target.style.animation = '';
-		ev.target.style.boxShadow = '';
-		ev.target.innerHTML = '';
-	}, ANIMATION_SPEED);
+	setInnerHTML(randomEmoji);
+	setBackgroundColor(rgbShuffledColors);
+	setAnimation(`fadeOut ease ${ANIMATION_LINGER}ms`);
+	setBoxShadow(`0px 0px 6px 1px ${rgbShuffledColors}`);
 };
 
 // const fetchEmojiData = async ev => {
@@ -112,7 +122,12 @@ const assignEmojiData = (ev, props) => {
 	}
 };
 
-const animateOnClick = (ev, props) => {
+const animateOnClick = (ev, props, timeOut, setAnimation) => {
+	if (!ev.target.innerHTML) {
+		return;
+	}
+	setAnimation(() => `fadeIn ease ${ANIMATION_LINGER}ms`);
+	clearTimeout(timeOut);
 	ev.target.style.zIndex = '100';
 	ev.target.style.transform = `translate(${translateByIndex(props)})`;
 	ev.target.style.transform = ev.target.style.transform += ' scale(3)';
@@ -153,20 +168,66 @@ const translateByIndex = props => {
 };
 
 const Cube = props => {
-	debugger;
+	const element = useRef();
+	const [mounted, setMounted] = useState('');
+	const [innerHTML, setInnerHTML] = useState('');
+	const [backgroundColor, setBackgroundColor] = useState('');
+	const [animation, setAnimation] = useState('');
+	const [boxShadow, setBoxShadow] = useState('');
+	const [timer, setTimer] = useState();
 
-	// const [innerHtml, setInnerHtml] = useState('')
+	const getStatefulStyle = {
+		innerHTML,
+		backgroundColor,
+		animation,
+		boxShadow
+	};
+	const setStatefulStyle = {
+		setInnerHTML,
+		setBackgroundColor,
+		setAnimation,
+		setBoxShadow
+	};
+	const statefulStyles = { getStatefulStyle, setStatefulStyle };
+
+	useEffect(() => {
+		if (mounted) {
+			//! ASSIGNING THE TIMEOUT TO A VARIABLE MAKES THE UI LAG.
+			const timerId = setTimeout(() => {
+				setInnerHTML('');
+				setBackgroundColor('black');
+				setAnimation('');
+				setBoxShadow('');
+				console.log('EFFECT!!!');
+			}, ANIMATION_SPEED - 50);
+			setTimer(timerId);
+			return () => clearTimeout(timerId);
+		} else {
+			setMounted(true);
+		}
+	}, [mounted, innerHTML, backgroundColor, animation, boxShadow]);
+
 	return (
 		<CubeStyle
+			ref={element}
 			// onClick={fetchEmojiData}
 			onClick={ev => {
-				animateOnClick(ev, props);
+				animateOnClick(ev, props, timer, setAnimation);
 			}}
-			onMouseLeave={leaveHandler}
-			onMouseOver={ev => {
-				hoverHandler(ev, props);
+			onMouseLeave={() => {
+				leaveHandler(setAnimation);
 			}}
-		/>
+			onMouseOver={() => {
+				hoverHandler(props, statefulStyles);
+			}}
+			style={{
+				backgroundColor,
+				animation,
+				boxShadow
+			}}
+		>
+			{innerHTML}
+		</CubeStyle>
 	);
 };
 
