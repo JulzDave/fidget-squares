@@ -97,7 +97,7 @@ function App() {
 		<AppWrapperWrapper>
 			<BackgroundAnimation />
 			<AppWrapper>
-				{startGame ?
+				{!startGame ?
 					<Wrapper dimentions={{ height, width }}></Wrapper>
 					: <GameMenu><p onClick={() => setStartGame(!startGame)}>Start Game</p></GameMenu>}
 			</AppWrapper>

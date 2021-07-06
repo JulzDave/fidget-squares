@@ -1,6 +1,6 @@
 // import { useState } from 'react';
 import { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import {
 	ANIMATION_LINGER,
 	ANIMATION_SPEED,
@@ -60,24 +60,23 @@ const CubeStyle = styled.span`
 		filter: invert(1);
 	}
 `;
-const leaveHandler = setAnimation => {
-	setAnimation(() => `fadeOut ease ${ANIMATION_LINGER}ms`);
-	// ev.target.style.backgroundColor = 'black';
+const leaveHandler = (setElementProperties, elementProperties) => {
+	setElementProperties({
+		innerHTML: elementProperties.innerHTML,
+		backgroundColor: elementProperties.backgroundColor,
+		animation: `fadeOut ease ${ANIMATION_LINGER}ms`,
+		boxShadow: elementProperties.boxShadow
+	});
 };
 
 const randomColorDepth = () => Math.floor(Math.random() * (255 - 0 + 1) + 0);
 
-const hoverHandler = (props, statefulStyles) => {
-	const { setInnerHTML, setBackgroundColor, setAnimation, setBoxShadow } =
-		statefulStyles.setStatefulStyle;
-	const { emojis } = props;
-	if (statefulStyles.getStatefulStyle.innerHTML) {
-		setInnerHTML('');
-		setBackgroundColor('black');
-		setAnimation('');
-		setBoxShadow('');
+const hoverHandler = (props, setElementProperties, elementProperties) => {
+	if (elementProperties.innerHTML) {
 		return;
 	}
+
+	const { emojis } = props;
 	const r = randomColorDepth();
 	const g = randomColorDepth();
 	const b = randomColorDepth();
@@ -86,10 +85,12 @@ const hoverHandler = (props, statefulStyles) => {
 	const shuffledColors = shuffle([r, g, b]).join(', ');
 	const rgbShuffledColors = `rgb(${shuffledColors})`;
 
-	setInnerHTML(randomEmoji);
-	setBackgroundColor(rgbShuffledColors);
-	setAnimation(`fadeOut ease ${ANIMATION_LINGER}ms`);
-	setBoxShadow(`0px 0px 6px 1px ${rgbShuffledColors}`);
+	setElementProperties({
+		innerHTML: randomEmoji,
+		backgroundColor: rgbShuffledColors,
+		animation: `fadeOut ease ${ANIMATION_LINGER}ms`,
+		boxShadow: `0px 0px 6px 1px ${rgbShuffledColors}`
+	});
 };
 
 // const fetchEmojiData = async ev => {
@@ -110,23 +111,36 @@ const hoverHandler = (props, statefulStyles) => {
 const assignEmojiData = (ev, props) => {
 	const foundEmojiDatum = props.emojiData?.[ev.target.innerHTML];
 	if (foundEmojiDatum?.group === props.findSubject) {
-		const slug = foundEmojiDatum?.slug;
-		if (slug) {
-			alert(
-				`SUCCESS! this is a ${slug} and a ${slug} is part of ${props.findSubject}`
-			);
-		}
+		// const slug = foundEmojiDatum?.slug;
+		// if (slug) {
+		// 	alert(
+		// 		`SUCCESS! this is a ${slug} and a ${slug} is part of ${props.findSubject}`
+		// 	);
+		// }
+		ev.target.style.border = '3px solid limegreen'
+
 	}
 	if (foundEmojiDatum) {
 		console.log(foundEmojiDatum);
 	}
 };
 
-const animateOnClick = (ev, props, timeOut, setAnimation) => {
+const animateOnClick = (
+	ev,
+	props,
+	timeOut,
+	setElementProperties,
+	elementProperties
+) => {
 	if (!ev.target.innerHTML) {
 		return;
 	}
-	setAnimation(() => `fadeIn ease ${ANIMATION_LINGER}ms`);
+	setElementProperties({
+		innerHTML: elementProperties.innerHTML,
+		backgroundColor: elementProperties.backgroundColor,
+		// animation: `fadeIn ease ${ANIMATION_LINGER}ms`,
+		boxShadow: elementProperties.boxShadow
+	});
 	clearTimeout(timeOut);
 	ev.target.style.zIndex = '100';
 	ev.target.style.transform = `translate(${translateByIndex(props)})`;
@@ -170,55 +184,54 @@ const translateByIndex = props => {
 const Cube = props => {
 	const element = useRef();
 	const [mounted, setMounted] = useState('');
-	const [innerHTML, setInnerHTML] = useState('');
-	const [backgroundColor, setBackgroundColor] = useState('');
-	const [animation, setAnimation] = useState('');
-	const [boxShadow, setBoxShadow] = useState('');
 	const [timer, setTimer] = useState();
-
-	const getStatefulStyle = {
-		innerHTML,
-		backgroundColor,
-		animation,
-		boxShadow
-	};
-	const setStatefulStyle = {
-		setInnerHTML,
-		setBackgroundColor,
-		setAnimation,
-		setBoxShadow
-	};
-	const statefulStyles = { getStatefulStyle, setStatefulStyle };
+	const [elementProperties, setElementProperties] = useState({
+		innerHTML: '',
+		backgroundColor: '',
+		animation: '',
+		boxShadow: ''
+	});
 
 	useEffect(() => {
 		if (mounted) {
+			debugger;
 			//! ASSIGNING THE TIMEOUT TO A VARIABLE MAKES THE UI LAG.
 			const timerId = setTimeout(() => {
-				setInnerHTML('');
-				setBackgroundColor('black');
-				setAnimation('');
-				setBoxShadow('');
+				setElementProperties({
+					innerHTML: '',
+					backgroundColor: 'transparent',
+					animation: '',
+					boxShadow: ''
+				});
 				console.log('EFFECT!!!');
 			}, ANIMATION_SPEED - 50);
 			setTimer(timerId);
-			return () => clearTimeout(timerId);
 		} else {
 			setMounted(true);
 		}
-	}, [mounted, innerHTML, backgroundColor, animation, boxShadow]);
+	}, [mounted, elementProperties.animation]);
+
+	const { backgroundColor, animation, boxShadow, innerHTML } =
+		elementProperties;
 
 	return (
 		<CubeStyle
 			ref={element}
 			// onClick={fetchEmojiData}
 			onClick={ev => {
-				animateOnClick(ev, props, timer, setAnimation);
+				animateOnClick(
+					ev,
+					props,
+					timer,
+					setElementProperties,
+					elementProperties
+				);
 			}}
 			onMouseLeave={() => {
-				leaveHandler(setAnimation);
+				leaveHandler(setElementProperties, elementProperties);
 			}}
 			onMouseOver={() => {
-				hoverHandler(props, statefulStyles);
+				hoverHandler(props, setElementProperties, elementProperties);
 			}}
 			style={{
 				backgroundColor,
@@ -226,7 +239,7 @@ const Cube = props => {
 				boxShadow
 			}}
 		>
-			{innerHTML}
+			<ThemeProvider theme={{ invert: '1' }}>{innerHTML}</ThemeProvider>
 		</CubeStyle>
 	);
 };
