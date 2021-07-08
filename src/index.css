@@ -1,31 +1,33 @@
 @font-face {
-  font-family: "Arcade Classic";
-  src: url(./assets/fonts/ARCADECLASSIC.TTF) format("truetype");
-  font-style: normal;
+    font-family: 'Arcade Classic';
+    src: url(./assets/fonts/ARCADECLASSIC.TTF) format('truetype');
+    font-style: normal;
 }
 
 * {
-  padding: 0px;
-  margin: 0px;
-  box-sizing: border-box;
-  overflow: hidden;
-  font-family: "Arcade Classic";
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-family: 'Arcade Classic';
 }
 
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: black;
-  height: 100vh;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+        'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+        'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: black;
+    height: 100vh;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
 }
 
 #root {
-  height: 100%;
+    height: 100%;
 }
