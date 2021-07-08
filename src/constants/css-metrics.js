@@ -1,4 +1,5 @@
 export const ANIMATION_SPEED = 2500;
+export const ANIMATION_SPEED_OFFSET = 50;
 export const ANIMATION_LINGER = ANIMATION_SPEED + 20;
 export const SQUARE_WIDTH = 45;
 export const DEDICATED_VIEWPORT = 95;
