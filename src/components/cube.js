@@ -83,11 +83,16 @@ const summonRgb = () => {
 
     return `rgb(${shuffledColors})`;
 };
-const hoverHandler = (props, setElementProperties, elementProperties) => {
+const hoverHandler = (
+    props,
+    setElementProperties,
+    elementProperties,
+    timerId,
+) => {
     if (elementProperties.innerHTML) {
         return;
     }
-
+    timerId && clearTimeout(timerId);
     const { emojis } = props;
 
     const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
@@ -99,18 +104,40 @@ const hoverHandler = (props, setElementProperties, elementProperties) => {
         boxShadow: `0px 0px 6px 1px ${summonedRgb}`,
     });
 };
-
+const getParsedPropsTranslateByIndex = propsTranslateByIndex => {
+    propsTranslateByIndex = propsTranslateByIndex.split(',').map(metric => {
+        const trimmedMetric = metric.trim();
+        return trimmedMetric ? parseInt(metric.trim().split('px')[0]) : 0;
+    });
+    if (propsTranslateByIndex.length < 2) {
+        return translateOffsetSetter();
+    } else {
+        return translateOffsetSetter(propsTranslateByIndex);
+    }
+};
+const translateOffsetSetter = (initialOffset = [0, 0]) => {
+    return [initialOffset[0], initialOffset[1] - 50]
+        .map(parsedMetric => parsedMetric + 'px')
+        .join(', ');
+};
 const assignEmojiData = (ev, props) => {
     const foundEmojiDatum = props.emojiData?.[ev.target.innerHTML];
+    
     if (foundEmojiDatum?.group === props.findSubject) {
+        const propsTranslateByIndex = translateByIndex(props);
+
         ev.target.style.border = '3px solid limegreen';
         ev.target.style.boxShadow = '0px 0px 6px 3px limegreen';
+        ev.target.style.transition = `none`;
         ev.target.style.transform = 'scale(3)';
-        ev.target.style.transform += `translate(${translateByIndex(props)})`;
-
+        
         setTimeout(() => {
             ev.target.style.transition = `transform ease-out ${ANIMATION_SPEED}ms`;
-            ev.target.style.transform += ' translate(0px, -50px)';
+            ev.target.style.transform += ` translate(${propsTranslateByIndex})`;
+            const parsedPropsTranslateByIndex = getParsedPropsTranslateByIndex(
+                propsTranslateByIndex,
+            );
+            ev.target.style.transform += ` translate(${parsedPropsTranslateByIndex})`;
         }, 0);
     }
     if (foundEmojiDatum) {
@@ -131,14 +158,13 @@ const animateOnClick = (
     setElementProperties({
         innerHTML: elementProperties.innerHTML,
         backgroundColor: elementProperties.backgroundColor,
-        // animation: `fadeIn ease ${ANIMATION_LINGER}ms`,
+        animation: ``,
         boxShadow: elementProperties.boxShadow,
     });
     clearTimeout(timeOut);
     ev.target.style.zIndex = '100';
-    // ev.target.style.transform = `translate(${translateByIndex(props)})`;
-    // ev.target.style.transform = ev.target.style.transform += ' scale(3)';
     ev.target.style.pointerEvents = 'none';
+    ev.target.style.transform = `scale(2) translate(${translateByIndex(props).split(',').map(metric => parseInt(metric.split('px')[0])/4 ).map(x => `${x}px`).join(', ') || '0px, 0px'})`;
     assignEmojiData(ev, props);
 
     setTimeout(() => {
@@ -172,6 +198,8 @@ const translateByIndex = props => {
         return `-${SQUARE_WIDTH}px, 0px`;
     } else if (index % cubesInWidth === 1) {
         return `${SQUARE_WIDTH}px, 0px`;
+    } else {
+        return '0px, 0px';
     }
 };
 
@@ -201,7 +229,7 @@ const Cube = props => {
         } else {
             setMounted(true);
         }
-    }, [mounted, elementProperties.animation]);
+    }, [mounted, elementProperties.animation, setTimer, setMounted]);
 
     const { backgroundColor, animation, boxShadow, innerHTML } =
         elementProperties;
@@ -223,7 +251,12 @@ const Cube = props => {
                 leaveHandler(setElementProperties, elementProperties);
             }}
             onMouseOver={() => {
-                hoverHandler(props, setElementProperties, elementProperties);
+                hoverHandler(
+                    props,
+                    setElementProperties,
+                    elementProperties,
+                    timer,
+                );
             }}
             style={{
                 backgroundColor,
