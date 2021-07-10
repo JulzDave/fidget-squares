@@ -164,7 +164,8 @@ const animateOnClick = (
     clearTimeout(timeOut);
     ev.target.style.zIndex = '100';
     ev.target.style.pointerEvents = 'none';
-    ev.target.style.transform = `scale(2) translate(${translateByIndex(props).split(',').map(metric => parseInt(metric.split('px')[0])/4 ).map(x => `${x}px`).join(', ') || '0px, 0px'})`;
+    ev.target.style.transition = 'none';
+    ev.target.style.transform = `scale(2) translate(${translateByIndex(props).split(',').map(metric => parseInt(metric.split('px')[0])/4 ).map(metric => `${metric}px`).join(', ') || '0px, 0px'})`;
     assignEmojiData(ev, props);
 
     setTimeout(() => {
