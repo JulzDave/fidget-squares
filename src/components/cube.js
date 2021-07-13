@@ -122,7 +122,7 @@ const translateOffsetSetter = (initialOffset = [0, 0]) => {
 };
 const assignEmojiData = (ev, props) => {
     const foundEmojiDatum = props.emojiData?.[ev.target.innerHTML];
-    
+
     if (foundEmojiDatum?.group === props.findSubject) {
         const propsTranslateByIndex = translateByIndex(props);
 
@@ -130,7 +130,7 @@ const assignEmojiData = (ev, props) => {
         ev.target.style.boxShadow = '0px 0px 6px 3px limegreen';
         ev.target.style.transition = `none`;
         ev.target.style.transform = 'scale(3)';
-        
+
         setTimeout(() => {
             ev.target.style.transition = `transform ease-out ${ANIMATION_SPEED}ms`;
             ev.target.style.transform += ` translate(${propsTranslateByIndex})`;
@@ -165,7 +165,12 @@ const animateOnClick = (
     ev.target.style.zIndex = '100';
     ev.target.style.pointerEvents = 'none';
     ev.target.style.transition = 'none';
-    ev.target.style.transform = `scale(2) translate(${translateByIndex(props).split(',').map(metric => parseInt(metric.split('px')[0])/4 ).map(metric => `${metric}px`).join(', ') || '0px, 0px'})`;
+    ev.target.style.transform = `scale(2) translate(${
+        translateByIndex(props)
+            .split(',')
+            .map(metric => `${parseInt(metric.split('px')[0]) / 4}px`)
+            .join(', ') || '0px, 0px'
+    })`;
     assignEmojiData(ev, props);
 
     setTimeout(() => {

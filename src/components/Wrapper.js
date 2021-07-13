@@ -87,6 +87,8 @@ const Wrapper = props => {
 
     const computedWidth = Math.floor(width / SQUARE_WIDTH);
     const computedHeight = Math.floor(height / SQUARE_WIDTH);
+    // TODO: Set loading until all cubes are rendered.
+
     return (
         <WrapperStyle className="wrapper" dimentions={props.dimentions}>
             <Title findSubject={findSubject} />
