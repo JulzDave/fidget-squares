@@ -219,9 +219,16 @@ const Cube = props => {
         animation: '',
         boxShadow: '',
     });
+    
+    const computedViewportCubeRatio = props.computedWidth * props.computedHeight;
 
     useEffect(() => {
         if (mounted) {
+            if (props.index === computedViewportCubeRatio - 1){
+                setTimeout(() => {
+                    props.destroySpinner()
+                    }, 11500);
+            }
             const timerId = setTimeout(() => {
                 setElementProperties({
                     innerHTML: '',
@@ -235,7 +242,7 @@ const Cube = props => {
         } else {
             setMounted(true);
         }
-    }, [mounted, elementProperties.animation, setTimer, setMounted]);
+    }, [mounted, elementProperties.animation, setTimer, setMounted, props, props.index, props.destroySpinner, computedViewportCubeRatio]);
 
     const { backgroundColor, animation, boxShadow, innerHTML } =
         elementProperties;

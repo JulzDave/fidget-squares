@@ -59,10 +59,15 @@ const sample = () => {
     return len ? groupNames[Math.floor(Math.random() * len)] : undefined;
 };
 
+
+
 const Wrapper = props => {
     const [findSubject, setFindSubject] = useState(sample());
+    const [loading, setLoading] = useState(true);
     // const [AudSucces] = useState(new Audio('../../public/sounds/zapsplat_bell_small_reception_desk_bell_single_ring_003_15125.mp3'));
-
+    const destroySpinner = () => {
+        setLoading(false)
+    }
     /*
 	A 2-step calculation for the following problem:
 	? how many tiles fit on random screen resolution:
@@ -91,6 +96,16 @@ const Wrapper = props => {
 
     return (
         <WrapperStyle className="wrapper" dimentions={props.dimentions}>
+            {loading && <div className="bulbul" style={{
+                color: 'white',
+                width: '4000%',
+                height: '2000%',
+                background: 'black',
+                zIndex: '3701',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>afwfawfawfcafasfas</div>}
             <Title findSubject={findSubject} />
             {[...Array(computedWidth * computedHeight).keys()].map(index => (
                 <Cube
@@ -102,6 +117,7 @@ const Wrapper = props => {
                     setFindSubject={setFindSubject}
                     key={index}
                     index={index}
+                    destroySpinner={destroySpinner}
                 />
             ))}
         </WrapperStyle>
